@@ -78,6 +78,23 @@
 3. 刷新页面后，后台会话里尚未回答的问题可能不再重新弹出（待操作卡片来自实时转发的请求，刷新后需打开该会话才重建）；侧栏仍会显示该会话有等待项。
 4. 系统通知依赖页面存活：标签页关闭或浏览器退出后不再推送。跨标签页不共享状态（每个标签页各自判断、各自维护去重）。
 
+## 版本与兼容性
+
+| 项目 | 值 |
+|---|---|
+| 已验证的 DSH 版本 | `0.2.0-rc.2` |
+| 插件版本 | `1.2.0` |
+| 许可证 | MIT |
+
+插件依赖 DSH 客户端已有的契约，不做版本探测。其中任一被重命名或改变语义时，表现是**插件不再激活、或不再出通知**，而不是静默降级：
+
+- `shell.overlay` 浮层座位，以及 `useSessions` / `useSessionStatus` 标准属性
+- `ctx.sessions.retainInfo`（判断某会话是否为当前主视图）
+- `api-session/status` 转发事件（跟踪 running → idle）
+- `ctx.uiWorkspace.openSession`（点击跳转）
+
+用 `dsh --version` 查看当前版本；版本不符时对照上表，或回退 DSH。
+
 ## 安装
 
 本仓库就是一个 DSH bundle 包。克隆到本地任意目录，再用 `plugin_manager` 以该目录为 target 安装：
@@ -117,6 +134,11 @@ plugin_manager
 | `package.json` | bundle 清单 + `dsh.client`（`platform: web`、`immediately: true`） |
 | `cordis.patch.yml` | 插入一行 `id: dsh-notify` |
 | `index.js` | Host 半边，空实现 |
-| `client.js` | 全部功能：词典、状态派生、通知卡片、slot 注册 |
+| `client.js` | 全部功能：词典、状态派生、通知卡片、系统通知、标签页角标、slot 注册 |
 | `locale/*.json` | Plugin Manager 卡片上的展示文案 |
 | `icon.svg` | 卡片图标 |
+| `LICENSE` | MIT |
+
+## 许可证
+
+[MIT](LICENSE)

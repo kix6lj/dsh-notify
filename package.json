@@ -3,6 +3,7 @@
   "version": "1.2.0",
   "private": true,
   "type": "module",
+  "license": "MIT",
   "description": "Frame-wide session notifications for DSH: in-page cards, OS notifications and a tab badge when a session needs you or finishes a turn.",
   "repository": {
     "type": "git",
