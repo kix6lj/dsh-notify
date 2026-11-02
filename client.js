@@ -182,11 +182,24 @@ window.__ModuleLoader__.load({
       return text ? label + ' · ' + text : label;
     }
 
+    /** Electron (Harness Desktop) exposes its own markers in the renderer. */
+    function isElectronRuntime() {
+      if (typeof navigator !== 'undefined') {
+        const ua = typeof navigator.userAgent === 'string' ? navigator.userAgent : '';
+        if (ua.indexOf('Electron') !== -1) return true;
+      }
+      const process = typeof window !== 'undefined' ? window.process : undefined;
+      return !!(process && process.versions && process.versions.electron);
+    }
+
     /** The Notifications API needs a secure context (https, localhost or 127.0.0.1). */
     function notificationSupport() {
       if (typeof window === 'undefined') return false;
-      if (window.isSecureContext !== true) return false;
-      return typeof window.Notification === 'function';
+      if (typeof window.Notification !== 'function') return false;
+      // Desktop maps the renderer Notification API to native notifications even when
+      // the app document is served from a custom protocol that is not "secure".
+      if (isElectronRuntime()) return true;
+      return window.isSecureContext === true;
     }
 
     function readPref() {

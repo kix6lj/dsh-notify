@@ -83,7 +83,7 @@
 | 项目 | 值 |
 |---|---|
 | 已验证的 DSH 版本 | `0.2.0-rc.2` |
-| 插件版本 | `1.2.0` |
+| 插件版本 | `1.2.1` |
 | 许可证 | MIT |
 
 插件依赖 DSH 客户端已有的契约，不做版本探测。其中任一被重命名或改变语义时，表现是**插件不再激活、或不再出通知**，而不是静默降级：
@@ -94,6 +94,24 @@
 - `ctx.uiWorkspace.openSession`（点击跳转）
 
 用 `dsh --version` 查看当前版本；版本不符时对照上表，或回退 DSH。
+
+## Desktop（Electron）
+
+DeepSeek Harness Desktop 承载的是同一个 Web 客户端（独立的 `desktop` profile，由 Electron 外壳启动），插件无需改动即可加载。系统通知走 Electron 对渲染进程 Notification API 的原生映射：
+
+| 项目 | 行为 |
+|---|---|
+| 支持情况 | `new Notification()` 由 Electron 转成系统通知，与浏览器里一致 |
+| 权限 | Electron 通常直接授予（`permission === 'granted'`），所以引导胶囊不会出现，系统通知默认就是开启的 |
+| 安全上下文 | 在 Electron 中跳过安全上下文检查——自定义协议可能不算 secure context |
+| 前台判断 | 窗口最小化或失焦时 `visibilityState` / `hasFocus()` 正常反映，仍只在「没在看你」时推送 |
+| 点击通知 | 回焦由渲染进程 `window.focus()` 完成；能否还原最小化窗口、点击是否被外壳接管，取决于 Desktop 外壳实现 |
+
+外壳侧的前提（插件无法绕过）：
+
+- **Windows**：Electron 应用需设置 AppUserModelID，否则系统 toast 可能不显示。
+- **macOS**：需要在「系统设置 → 通知 → DeepSeek Harness」中允许；未签名的构建可能不出现在该列表。
+- **Linux**：依赖桌面通知服务（libnotify / D-Bus）。
 
 ## 安装
 
