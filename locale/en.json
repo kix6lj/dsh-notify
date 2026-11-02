@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Session Notify",
+    "description": "Shows a frame-wide notification when a session needs your input or finishes a turn."
+  }
+}

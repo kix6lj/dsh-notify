@@ -1,0 +1,40 @@
+{
+  "name": "@local/dsh-notify",
+  "version": "1.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Frame-wide session notifications for DSH: in-page cards, OS notifications and a tab badge when a session needs you or finishes a turn.",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/kix6lj/dsh-notify.git"
+  },
+  "homepage": "https://github.com/kix6lj/dsh-notify",
+  "icon": "./icon.svg",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "icon.svg",
+    "locale/*.json",
+    "README.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-ui-session"
+      ]
+    }
+  }
+}
